@@ -31,10 +31,13 @@ const Login = () => {
       .catch((error) => {
         console.log(error.response);
         // Handle errors, display appropriate error message
-        if (error.response.status === 400)
-          setErrors({ [Object.keys(error.response.data)[0]]: 'Username OR Password is invalid. Try Again !!' });
-        else
-          setErrors({ 'error': 'Internal Server Error. Try Again!!!' });
+        if (error.response.status === 400) {
+          setErrors({ 'validation': 'Username or password is invalid. Please try again.' });
+        } else if (error.response.status === 401) {
+          setErrors({ 'authentication': 'Authentication failed. Invalid credentials.' });
+        } else {
+          setErrors({ 'error': 'An unexpected error occurred. Please try again later.' });
+        }
       });
   };
 

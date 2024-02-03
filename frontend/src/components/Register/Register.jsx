@@ -25,20 +25,17 @@ const Register = () => {
     if (password !== password2) {
       setErrors({ ...errors, 'password': 'Password not Matched. Try Again!' });
     } else {
-      // Make API call to register user
-      Axios({
-        method: 'post',
-        url: `${domain}/api/register/`,
-        headers: header2,
-        data: {
+      try {
+        // Make API call to register user
+        const response = await Axios.post(`${domain}/api/register/`, {
           username: username,
           password: password,
           first_name: firstName,
           last_name: lastName,
           password2: password2,
           email: email
-        },
-      }).then((response) => {
+        }, { headers: header2 });
+
         // Redirect to login page after successful registration
         if (response.data['data']) {
           history.push('/login');
@@ -48,9 +45,16 @@ const Register = () => {
         if (response.data.error) {
           setErrors({ ...errors, ...response.data.message });
         }
-      }).catch((error) => {
-        setErrors({ ...errors, ...error.message });
-      });
+      } catch (error) {
+        console.error('Error during registration:', error);
+
+        // Handle specific errors and provide user feedback
+        if (error.response && error.response.status === 400) {
+          setErrors({ ...errors, ...error.response.data });
+        } else {
+          alert('Error during registration. Please try again later.');
+        }
+      }
     }
   };
 

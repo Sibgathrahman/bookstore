@@ -5,18 +5,12 @@ import { domain } from '../../env';
 import { useGlobalState } from '../../state/provider';
 
 const Order = () => {
-    // Get cart product incomplete and dispatch function from global state
     const [{ cart_product_incomplete }, dispatch] = useGlobalState();
-
-    // State for form fields
     const [address, setAddress] = useState("");
     const [mobile, setMobile] = useState("");
     const [email, setEmail] = useState("");
-
-    // Access the browser history
     const history = useHistory();
 
-    // Construct the order data object
     const orderData = {
         "cartId": cart_product_incomplete[0]?.id,
         "address": address,
@@ -24,25 +18,27 @@ const Order = () => {
         "email": email
     };
 
-    // Get token from local storage
     const token = window.localStorage.getItem('token');
 
-    // Calculate the total of subtotals
     const totalSubtotal = cart_product_incomplete[0]?.cart_product.reduce(
         (total, data) => total + data.subtotal,
         0
     );
 
-    // Function to place an order
     const orderNow = async () => {
-        Axios({
-            method: "post",
-            url: `${domain}/api/orders/`,
-            headers: {
-                Authorization: `token ${token}`
-            },
-            data: orderData
-        }).then(response => {
+        try {
+            // Validate required fields
+            if (!address || !mobile || !email) {
+                alert("All the fields are required!")
+                throw new Error("Address, mobile, and email are required.");
+            }
+
+            const response = await Axios.post(`${domain}/api/orders/`, orderData, {
+                headers: {
+                    Authorization: `token ${token}`
+                },
+            });
+
             // Redirect to order history page
             history.push('/oldOrders');
 
@@ -57,7 +53,11 @@ const Order = () => {
                 type: "ADD_CART_PRODUCT_INCOMPLETE",
                 cart_product_incomplete: null
             });
-        });
+
+        } catch (error) {
+            console.error(error);
+            // Handle error and provide user feedback if needed
+        }
     };
 
     return (
@@ -101,15 +101,15 @@ const Order = () => {
                     <div>
                         <div className="form-group py-2">
                             <label>Address</label>
-                            <input onChange={(e) => setAddress(e.target.value)} type="text" className="form-control" placeholder="Address" />
+                            <input onChange={(e) => setAddress(e.target.value)} type="text" className="form-control" placeholder="Address" required />
                         </div>
                         <div className="form-group py-2">
                             <label>Mobile</label>
-                            <input onChange={(e) => setMobile(e.target.value)} type="text" className="form-control" placeholder="Mobile" />
+                            <input onChange={(e) => setMobile(e.target.value)} type="text" className="form-control" placeholder="Mobile" required />
                         </div>
                         <div className="form-group py-2">
                             <label>Email</label>
-                            <input onChange={(e) => setEmail(e.target.value)} type="text" className="form-control" placeholder="Email" />
+                            <input onChange={(e) => setEmail(e.target.value)} type="text" className="form-control" placeholder="Email" required />
                         </div>
                         {/* Button to place an order */}
                         <button className="btn btn-info my-2 mb-5" onClick={orderNow}>Order</button>

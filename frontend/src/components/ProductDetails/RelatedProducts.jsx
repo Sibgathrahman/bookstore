@@ -11,29 +11,38 @@ const RelatedProduct = ({ item }) => {
 
     // Function to add the product to the cart
     const addToCart = async (id) => {
-        // Check if the user is logged in
-        profile !== null ? (
-            // If logged in, make a request to add the product to the cart
-            await Axios({
-                method: 'post',
-                url: `${domain}/api/addToCart/`,
-                headers: {
-                    Authorization: `token ${window.localStorage.getItem('token')}`
-                },
-                data: { "id": id }
-            }).then(response => {
+        try {
+            // Check if the user is logged in
+            if (profile !== null) {
+                // If logged in, make a request to add the product to the cart
+                const response = await Axios({
+                    method: 'post',
+                    url: `${domain}/api/addToCart/`,
+                    headers: {
+                        Authorization: `token ${window.localStorage.getItem('token')}`
+                    },
+                    data: { "id": id }
+                });
+
                 // Dispatch an action to update the state for a page reload
                 dispatch({
                     type: "ADD_RELOAD_PAGE_DATA",
                     reloadPage: response
-                })
-            })
-        ) : (
-            // If not logged in, redirect to the login page
-            history.push("/login")
-        )
-    };
+                });
+            } else {
+                // If not logged in, redirect to the login page
+                history.push("/login");
+            }
+        } catch (error) {
+            console.error('Error adding to cart:', error);
 
+            if (error.response && error.response.status === 401) {
+                history.push('/login');
+            } else {
+                alert('Error adding to cart. Please try again later.');
+            }
+        }
+    };
 
     return (
         <>
@@ -65,7 +74,7 @@ const RelatedProduct = ({ item }) => {
                             <h5 className="mt-4">
                                 {' '}
                                 Price: <del className="text-danger">
-                                    {item.market_price} 
+                                    {item.market_price}
                                 </del>{' '}
                                 <i className="text-success"> {item.selling_price} AED</i>
                             </h5>

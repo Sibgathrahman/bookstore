@@ -6,88 +6,71 @@ import Product from '../Product/Product';
 const HomePage = () => {
     // State to store the products data
     const [products, setProducts] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [error, setError] = useState(null);
 
-    // Fetch data when the component mounts
+    // Fetch data when the component mounts or page changes
     useEffect(() => {
         const getData = () => {
             Axios({
                 method: 'get',
-                url: `${domain}/api/product/`,
-            }).then((res) => {
-                setProducts(res.data);
-            });
+                url: `${domain}/api/product/?page=${currentPage}`,
+            })
+                .then((res) => {
+                    setProducts(res.data);
+                })
+                .catch((error) => {
+                    setError("An error occurred while fetching data. Please try again later.");
+                    console.error("Error fetching data:", error);
+                });
         };
         getData();
-    }, []);
+    }, [currentPage]);
 
-    // Function to fetch the next page of products
-    const nextPage = async () => {
-        Axios({
-            method: 'get',
-            url: products?.next,
-        }).then((res) => {
-            setProducts(res.data);
-        });
-    };
-
-    // Function to fetch the previous page of products
-    const previousPage = async () => {
-        Axios({
-            method: 'get',
-            url: products?.previous,
-        }).then((res) => {
-            setProducts(res.data);
-        });
+    // Function to fetch a specific page of products
+    const goToPage = (pageNumber) => {
+        setCurrentPage(pageNumber);
     };
 
     return (
         <div className="container-fluid">
             <div className="row ps-md-5 pe-md-5 ps-sm-2 pe-sm-2 mx-auto">
                 <div className="row mx-auto">
-                    {products !== null ? (
-                        <>
-                            {products?.results.map((item, i) => (
-                                // Display each product using the Product component
-                                <div className="col-12 col-sm-8 col-md-6 col-lg-4" key={i}>
-                                    <Product item={item} />
-                                </div>
-                            ))}
-                        </>
+                    {error ? (
+                        // Display an error message if there's an error
+                        <div className="col-12">
+                            <h1>Error: {error}</h1>
+                        </div>
                     ) : (
-                        // Display a loading message while products are being fetched
+                        // Display products or loading message
                         <>
-                            <h1>Loading...</h1>
+                            {products !== null ? (
+                                products.results.map((item, i) => (
+                                    <div className="col-12 col-sm-8 col-md-6 col-lg-4" key={i}>
+                                        <Product item={item} />
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="col-12">
+                                    <h1>Loading...</h1>
+                                </div>
+                            )}
                         </>
                     )}
                 </div>
                 {/* Pagination controls */}
                 <div className="homepage__pagination">
-                    <div className="">
-                        {products?.previous !== null ? (
-                            // Enable previous button if there is a previous page
-                            <button onClick={previousPage} className="btn btn-lg btn-success">
-                                <i className="fas fa-backward" /> Previous
-                            </button>
-                        ) : (
-                            // Disable previous button if no previous page
-                            <button className="btn btn-lg btn-success" disabled>
-                                {' '}
-                                <i className="fas fa-backward" /> Previous
-                            </button>
-                        )}
-                    </div>
-                    <div className="">
-                        {products?.next !== null ? (
-                            // Enable next button if there is a next page
-                            <button onClick={nextPage} className="btn btn-lg btn-danger">
-                                Next <i className="fas fa-forward" />
-                            </button>
-                        ) : (
-                            // Disable next button if no next page
-                            <button className="btn btn-lg btn-danger" disabled>
-                                Next <i className="fas fa-forward" />
-                            </button>
-                        )}
+                    <div className="pt-3 pb-5 ms-auto">
+                        {products?.count &&
+                            Array.from({ length: Math.ceil(products.count / 10) }, (_, index) => (
+                                <button
+                                    key={index + 1}
+                                    onClick={() => goToPage(index + 1)}
+                                    className={`btn btn-md m-1 ${currentPage === index + 1 ? 'btn-primary' : 'btn-outline-secondary'}`}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
                     </div>
                 </div>
             </div>

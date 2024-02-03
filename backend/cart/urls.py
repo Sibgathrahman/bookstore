@@ -12,5 +12,4 @@ urlpatterns = [
     path("updateCartProduct/", UpdateCartProduct.as_view(), name="updateCartProduct"),
     path("editCartProduct/", EditCartProduct.as_view(), name="editCartProduct"),
     path("deleteCartProduct/", DeleteCartProduct.as_view(), name="deleteCartProduct"),
-    path("deleteFullCart/", DeleteFullCart.as_view(), name="deleteFullCart"),
 ]

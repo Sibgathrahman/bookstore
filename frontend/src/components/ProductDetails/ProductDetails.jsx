@@ -15,52 +15,67 @@ const ProductDetails = () => {
     useEffect(() => {
         // Fetch product details when the component mounts
         const getProduct = async () => {
-            await Axios({
-                method: 'get',
-                url: `${domain}/api/product/${id}/`,
-            })
-                .then((response) => {
-                    setProduct(response?.data);
-                    getCategoryData(response?.data?.category['id']);
-                })
-                .catch((error) => {
-                    console.log(error);
+            try {
+                const response = await Axios({
+                    method: 'get',
+                    url: `${domain}/api/product/${id}/`,
                 });
+
+                setProduct(response?.data);
+                getCategoryData(response?.data?.category['id']);
+            } catch (error) {
+                console.error('Error fetching product details:', error);
+            }
         };
-        getProduct().then().catch();
+
+        getProduct();
     }, [id]);
 
     // Fetch related category products
     const getCategoryData = async (id) => {
-        await Axios({
-            method: 'get',
-            url: `${domain}/api/category/${id}/`,
-        }).then((response) => {
+        try {
+            const response = await Axios({
+                method: 'get',
+                url: `${domain}/api/category/${id}/`,
+            });
+
             console.log(response?.data);
             setCategoryProducts(response?.data);
-        });
+        } catch (error) {
+            console.error('Error fetching category products:', error);
+        }
     };
 
     // Add product to cart
     const addToCart = async (id) => {
-        profile !== null ? (
-            await Axios({
-                method: 'post',
-                url: `${domain}/api/addToCart/`,
-                headers: {
-                    Authorization: `token ${window.localStorage.getItem('token')}`
-                },
-                data: { "id": id }
-            }).then(response => {
+        try {
+            if (profile !== null) {
+                const response = await Axios({
+                    method: 'post',
+                    url: `${domain}/api/addToCart/`,
+                    headers: {
+                        Authorization: `token ${window.localStorage.getItem('token')}`
+                    },
+                    data: { "id": id }
+                });
+
                 console.log(response);
                 dispatch({
                     type: "ADD_RELOAD_PAGE_DATA",
                     reloadPage: response
-                })
-            })
-        ) : (
-            history.push("/login")
-        )
+                });
+            } else {
+                history.push("/login");
+            }
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+
+            if (error.response && error.response.status === 401) {
+                history.push('/login');
+            } else {
+                alert('Error adding to cart. Please try again later.');
+            }
+        }
     }
 
     return (
@@ -96,7 +111,7 @@ const ProductDetails = () => {
                                                     {' '}
                                                     Price:{' '}
                                                     <del className="text-danger">
-                                                        {product.market_price} 
+                                                        {product.market_price}
                                                     </del>
                                                     {' '}
                                                     <i className="text-success">
