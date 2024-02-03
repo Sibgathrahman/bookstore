@@ -6,7 +6,6 @@ import {domain} from '../../env'
 const OldOrders = () => {
     const token = window.localStorage.getItem('token')
     const [orders, setOrders] = useState(null)
-    const [reload, setReload] = useState(null);
 
     useEffect(() => {
         const getOrder = async () => {
@@ -21,23 +20,12 @@ const OldOrders = () => {
             })
         }
         getOrder().then().catch();
-    }, [reload, token])
+    }, [token])
 
-    const deleteOrderHistory = async (id) => {
-        await Axios({
-            method: "delete",
-            url: `${domain}/api/orders/${id}/`,
-            headers: {
-                Authorization: `token ${token}`
-            }
-        }).then((res) => {
-            setReload(res.data)
-        })
-    }
 
     return (
         <div className="container">
-            <h1>Orders History</h1>
+            <h1 className='pt-3 pb-3'>Orders History</h1>
             <table className="table">
                 <thead>
                 <tr>
@@ -45,7 +33,6 @@ const OldOrders = () => {
                     <th>Total</th>
                     <th>Product</th>
                     <th>Order Status</th>
-                    <th></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -55,20 +42,18 @@ const OldOrders = () => {
                         orders?.map((order, i) => (
                             <tr key={i}>
                                 <td>{i + 1}</td>
-                                <td>TK. {order?.total}</td>
+                                <td>AED {order?.total}</td>
                                 <td>{order?.cart_product?.length}</td>
                                 <td>{order?.order_status}</td>
                                 <td><Link to={`/oldOrders/${order.id}`} className="btn btn-success">Details</Link></td>
-                                <td><p onClick={() => deleteOrderHistory(order.id)}
-                                       className="btn btn-danger">Delete</p></td>
                             </tr>
                         )) :
                         (
                             <div>
                                 <h1 className="display-1">
-                                    No Old Order
+                                    No Previous Order
                                 </h1>
-                                <Link to="/" className="btn btn-info">GO HOME</Link>
+                                <Link to="/profile" className="btn btn-info">BACK TO PROFILE</Link>
                             </div>
                         )
                 }

@@ -17,6 +17,13 @@ const Order = () => {
         "email": email
     }
     const token = window.localStorage.getItem('token')
+
+    // Calculate the total of subtotals
+    const totalSubtotal = cart_product_incomplete[0]?.cart_product.reduce(
+        (total, data) => total + data.subtotal,
+        0
+    );
+
     const orderNow = async () => {
         Axios({
             method: "post",
@@ -37,56 +44,58 @@ const Order = () => {
             })
         })
     }
+
     return (
         <div className="container">
+            <h2 className='pt-3 pb-3'>Order Summary</h2>
             <div className="row">
                 <div className="col-md-6 p-2">
                     <table className="table table-striped">
                         <thead>
-                            <th>SN</th>
-                            <th>Product</th>
-                            <th>Rate</th>
-                            <th>Quantity</th>
-                            <th>Subtotal</th>
+                            <tr>
+                                <th>SN</th>
+                                <th>Product</th>
+                                <th>Rate</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                            </tr>
                         </thead>
                         <tbody>
-                            {
-                                 cart_product_incomplete[0]?.cart_product.map((data, i) => (
-                                    <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>{data.product[0].title}</td>
-                                        <td>{data.price}</td>
-                                        <td>{data.quantity}</td>
-                                        <td>{"AED " +data.subtotal}</td>
-                                    </tr>
-                                ))
-                            }
+                            {cart_product_incomplete[0]?.cart_product.map((data, i) => (
+                                <tr key={i}>
+                                    <td>{i + 1}</td>
+                                    <td>{data.product[0].title}</td>
+                                    <td>{"AED " + data.price}</td>
+                                    <td>{data.quantity}</td>
+                                    <td>{"AED " + data.subtotal}</td>
+                                </tr>
+                            ))}
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colSpan="4" className="text-right" >Total</th>
-                                <th>{cart_product_incomplete?.total}</th>
+                                <th colSpan="4" className="text-right">Total</th>
+                                <th>{"AED " + totalSubtotal}</th>
                             </tr>
-                            <Link to='/cart/' className="btn btn-outline-secondary" >Edit Cart</Link>
+                            <Link to='/cart/' className="btn btn-outline-secondary">Edit Cart</Link>
                         </tfoot>
                     </table>
                 </div>
                 <div className="col-md-6">
                     <h1>Order Now</h1>
                     <div>
-                        <div className="form-group">
+                        <div className="form-group py-2">
                             <label>Address</label>
                             <input onChange={(e) => setAddress(e.target.value)} type="text" className="form-control" placeholder="Address" />
                         </div>
-                        <div className="form-group">
+                        <div className="form-group py-2">
                             <label>Mobile</label>
                             <input onChange={(e) => setMobile(e.target.value)} type="text" className="form-control" placeholder="Mobile" />
                         </div>
-                        <div className="form-group">
+                        <div className="form-group py-2">
                             <label>Email</label>
                             <input onChange={(e) => setEmail(e.target.value)} type="text" className="form-control" placeholder="Email" />
                         </div>
-                        <button className="btn btn-info" onClick={orderNow}>Order</button>
+                        <button className="btn btn-info my-2 mb-5" onClick={orderNow}>Order</button>
                     </div>
                 </div>
             </div>

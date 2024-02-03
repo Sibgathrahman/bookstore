@@ -34,7 +34,6 @@ const OldOrderDetails = () => {
                     <th>Total</th>
                     <th>Email</th>
                     <th>Mobile</th>
-                    <th>discount</th>
                     <th>Products</th>
                 </tr>
                 </thead>
@@ -44,10 +43,9 @@ const OldOrderDetails = () => {
                         details != null && (
                             <>
                                 <td>{details.date}</td>
-                                <td>{"$" + details.total} </td>
+                                <td>{"AED " + details.total} </td>
                                 <td>{details.email}</td>
                                 <td>{details.mobile}</td>
-                                <td>{details.discount + "%"}</td>
                                 <td>{details.cart_product?.length}</td>
                             </>
                         )
@@ -72,9 +70,9 @@ const OldOrderDetails = () => {
                         <tr key={i}>
                             <td>{i + 1}</td>
                             <td>{data.product[0].title}</td>
-                            <td>{"$" + data.price}</td>
+                            <td>{"AED " + data.price}</td>
                             <td>{data.quantity}</td>
-                            <td>{"$" +data.subtotal}</td>
+                            <td>{"AED " +data.subtotal}</td>
                         </tr>
                     ))
                 }

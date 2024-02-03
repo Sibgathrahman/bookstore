@@ -1,15 +1,17 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import {useGlobalState} from '../../state/provider';
+import { Link } from 'react-router-dom';
+import { useGlobalState } from '../../state/provider';
 
 const NavBar = () => {
-    const [{profile, cart_product_incomplete}, dispatch] = useGlobalState()
+    const [{ profile, cart_product_incomplete }, dispatch] = useGlobalState();
     let cart_product_length = 0;
+
     if (cart_product_incomplete !== null) {
         cart_product_length = cart_product_incomplete[0]?.cart_product.length;
     } else {
         cart_product_length = 0;
     }
+
     const logoutButton = () => {
         window.localStorage.clear();
         dispatch({
@@ -25,31 +27,39 @@ const NavBar = () => {
                 <Link className="navbar-brand" to="/">
                     Ecommerce
                 </Link>
-                <ul className="navbar-nav mr-auto">
-                    {
-                        profile !== null ? (
-                                <>
-                                    <li className="nav-item">
-                                        <Link to="/cart" className="btn btn-dark">
-                                            <i className="fas fa-cart-plus"/>
-                                            <span>({cart_product_length})</span>
-                                        </Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link to="/profile" className="nav-link btn-dark active">Profile</Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link onClick={logoutButton} className="nav-link active btn-dark">Logout</Link>
-                                    </li>
-                                </>
-                            ) :
-                            (
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul className="navbar-nav mb-2 mb-lg-0 ms-auto">
+                        {profile !== null ? (
+                            <>
                                 <li className="nav-item">
-                                    <Link to="/login" className="nav-link  active btn-dark">Login</Link>
+                                    <Link to="/cart" className="btn btn-dark">
+                                        <i className="fas fa-cart-plus" />
+                                        <span>({cart_product_length})</span>
+                                    </Link>
                                 </li>
-                            )
-                    }
-                </ul>
+                                <li className="nav-item">
+                                    <Link to="/profile" className="nav-link btn-dark active">
+                                        Profile
+                                    </Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link onClick={logoutButton} className="nav-link active btn-dark">
+                                        Logout
+                                    </Link>
+                                </li>
+                            </>
+                        ) : (
+                            <li className="nav-item">
+                                <Link to="/login" className="nav-link  active btn-dark">
+                                    Login
+                                </Link>
+                            </li>
+                        )}
+                    </ul>
+                </div>
             </div>
         </nav>
     );
