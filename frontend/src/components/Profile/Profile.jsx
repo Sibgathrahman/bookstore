@@ -8,16 +8,21 @@ import prfilePhoto from '../../static/images/profile.jpg';
 import booksBg from '../../static/images/booksTwo.jpg';
 
 const Profile = () => {
+    // Get user profile data from global state
     const [{ profile }, dispatch] = useGlobalState();
+
+    // State for form fields
     const [image, setImage] = useState(null);
     const [firstname, setFirstname] = useState(profile?.user.first_name);
     const [lastname, setLastname] = useState(profile?.user.last_name);
     const [email, setEmail] = useState(profile?.user.email);
 
+    // Function to upload profile picture
     const uploadImage = async () => {
         const form_data = new FormData();
         form_data.append('image', image);
 
+        // Make API request to update profile picture
         Axios({
             method: "post",
             url: `${domain}/api/updateprofile/`,
@@ -26,6 +31,7 @@ const Profile = () => {
             },
             data: form_data
         }).then(response => {
+            // Update global state and show alert
             dispatch({
                 type: "ADD_RELOAD_PAGE_DATA",
                 reloadPage: response.data
@@ -34,7 +40,9 @@ const Profile = () => {
         });
     };
 
+    // Function to update user data
     const updateData = async () => {
+        // Make API request to update user data
         Axios({
             method: "post",
             url: `${domain}/api/updateuser/`,
@@ -47,6 +55,7 @@ const Profile = () => {
                 "email": email
             }
         }).then(response => {
+            // Update global state and show alert
             dispatch({
                 type: "ADD_RELOAD_PAGE_DATA",
                 reloadPage: response.data
@@ -58,6 +67,7 @@ const Profile = () => {
     return (
         <div className="container py-5">
             <div className="row m-3 p-3 shadow-lg">
+                {/* Profile Card */}
                 <div className="col-lg-4 col-md-12 mb-4 mb-lg-0">
                     <div className={`card ${styles.profileCard3}`}>
                         <div className={styles.backgroundBlock}>
@@ -74,16 +84,20 @@ const Profile = () => {
                             <h2>{profile?.user.first_name + " "} {profile?.user.last_name}
                                 <small>{profile?.user.username.toUpperCase()}</small></h2>
                             <h3 className="text-secondary ">{profile?.user.email}</h3>
+                            {/* Button to navigate to Order History */}
                             <div className="form-group pb-3">
                                 <Link to="/oldorders" className="btn btn-info">Order History</Link>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {/* Update Profile Form */}
                 <div className="col-lg-8 col-md-12">
                     <form method="POST" encType="multipart/form-data">
                         <fieldset className="form-group">
                             <legend className="border-bottom mb-4">Profile Update</legend>
+                            {/* Upload Profile Picture */}
                             <div className="form-group">
                                 <label>Upload Profile Picture</label>
                                 <div className="row">
@@ -99,6 +113,8 @@ const Profile = () => {
                                     </div>
                                 </div>
                             </div>
+
+                            {/* First Name and Last Name Fields */}
                             <div className="row form-group pb-3">
                                 <div className="col">
                                     <label>First Name</label>
@@ -119,6 +135,8 @@ const Profile = () => {
                                     />
                                 </div>
                             </div>
+
+                            {/* Email Field */}
                             <div className="form-group pb-3">
                                 <label>Email</label>
                                 <input
@@ -129,6 +147,8 @@ const Profile = () => {
                                 />
                             </div>
                         </fieldset>
+
+                        {/* Update Button */}
                         <div className="form-group pb-3">
                             <p className="btn btn-outline-danger" onClick={updateData}>Update</p>
                         </div>

@@ -10,6 +10,7 @@ const CartPage = () => {
 
     const token = window.localStorage.getItem('token');
 
+    // Function to update the quantity of a cart product
     const updateCartProduct = async (id) => {
         await Axios({
             method: 'post',
@@ -26,6 +27,7 @@ const CartPage = () => {
         });
     };
 
+    // Function to edit the quantity of a cart product
     const editCartProduct = async (id) => {
         await Axios({
             method: 'post',
@@ -42,6 +44,7 @@ const CartPage = () => {
         });
     };
 
+    // Function to delete a cart product
     const deleteCartProduct = async (id) => {
         await Axios({
             method: 'post',
@@ -83,8 +86,11 @@ const CartPage = () => {
                                     <td>{data.quantity}</td>
                                     <td>{"AED " + data.subtotal}</td>
                                     <td>
+                                        {/* Button to decrease quantity */}
                                         <button onClick={() => editCartProduct(data.id)} className="btn btn-outline-secondary">-</button>
+                                        {/* Button to delete product */}
                                         <button onClick={() => deleteCartProduct(data.id)} className="btn btn-outline-danger">X</button>
+                                        {/* Button to increase quantity */}
                                         <button onClick={() => updateCartProduct(data.id)} className="btn btn-outline-success">+</button>
                                     </td>
                                 </tr>
@@ -96,8 +102,10 @@ const CartPage = () => {
                                 <th>{"AED " + cart_product_incomplete[0]?.cart_product.reduce((total, data) => total + data.subtotal, 0)}</th>
                                 <th>
                                     {cart_product_incomplete[0]?.cart_product.reduce((total, data) => total + data.subtotal, 0) !== 0 ? (
+                                        // Button to navigate to order page if cart is not empty
                                         <Link to="/order" className="btn btn-success">Order Now</Link>
                                     ) : (
+                                        // Button to navigate back to home if cart is empty
                                         <Link to="/" className="btn btn-secondary">Back to home</Link>
                                     )}
                                 </th>
@@ -106,6 +114,7 @@ const CartPage = () => {
                     </table>
                 </div>
             ) : (
+                // Display if the cart is empty
                 <div>
                     <h3>There is not any Product in Cart. Go to the home page and add some Products.</h3>
                     <Link to="/" className="btn btn-secondary">Back to home</Link>

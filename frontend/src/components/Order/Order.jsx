@@ -1,22 +1,31 @@
-import Axios from 'axios'
-import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import { domain } from '../../env'
-import { useGlobalState } from '../../state/provider'
+import Axios from 'axios';
+import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { domain } from '../../env';
+import { useGlobalState } from '../../state/provider';
 
 const Order = () => {
-    const [{ cart_product_incomplete }, dispatch] = useGlobalState()
-    const [address, setAddress] = useState("")
-    const [mobile, setMobile] = useState("")
-    const [email, setEmail] = useState("")
-    const history = useHistory()
+    // Get cart product incomplete and dispatch function from global state
+    const [{ cart_product_incomplete }, dispatch] = useGlobalState();
+
+    // State for form fields
+    const [address, setAddress] = useState("");
+    const [mobile, setMobile] = useState("");
+    const [email, setEmail] = useState("");
+
+    // Access the browser history
+    const history = useHistory();
+
+    // Construct the order data object
     const orderData = {
         "cartId": cart_product_incomplete[0]?.id,
         "address": address,
         "mobile": mobile,
         "email": email
-    }
-    const token = window.localStorage.getItem('token')
+    };
+
+    // Get token from local storage
+    const token = window.localStorage.getItem('token');
 
     // Calculate the total of subtotals
     const totalSubtotal = cart_product_incomplete[0]?.cart_product.reduce(
@@ -24,6 +33,7 @@ const Order = () => {
         0
     );
 
+    // Function to place an order
     const orderNow = async () => {
         Axios({
             method: "post",
@@ -33,17 +43,22 @@ const Order = () => {
             },
             data: orderData
         }).then(response => {
-            history.push('/oldOrders')
+            // Redirect to order history page
+            history.push('/oldOrders');
+
+            // Update global state with reload page data
             dispatch({
                 type: "ADD_RELOAD_PAGE_DATA",
                 reloadPage: response
-            })
+            });
+
+            // Reset cart_product_incomplete in global state
             dispatch({
                 type: "ADD_CART_PRODUCT_INCOMPLETE",
                 cart_product_incomplete: null
-            })
-        })
-    }
+            });
+        });
+    };
 
     return (
         <div className="container">
@@ -76,6 +91,7 @@ const Order = () => {
                                 <th colSpan="4" className="text-right">Total</th>
                                 <th>{"AED " + totalSubtotal}</th>
                             </tr>
+                            {/* Link to edit cart */}
                             <Link to='/cart/' className="btn btn-outline-secondary">Edit Cart</Link>
                         </tfoot>
                     </table>
@@ -95,12 +111,13 @@ const Order = () => {
                             <label>Email</label>
                             <input onChange={(e) => setEmail(e.target.value)} type="text" className="form-control" placeholder="Email" />
                         </div>
+                        {/* Button to place an order */}
                         <button className="btn btn-info my-2 mb-5" onClick={orderNow}>Order</button>
                     </div>
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default Order;
