@@ -11,3 +11,26 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.single_product{
+  align-items: center;
+}
+/* .single_product img{
+  width: 200px;
+} */
+.product_image img{
+  width: 150px;
+  height: 200px;
+  object-fit: contain;
+}
+.homepage__pagination{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px;
+}
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
