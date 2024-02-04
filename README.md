@@ -77,29 +77,53 @@ This is an e-commerce web application developed using React.js for the front end
 
 ## UI Designs
 
-**Home page**
-![Home page](./uiImages/home.png)
+**Registration Page**
+![Registration page](./uiImages/register.png)
 
-**Cart Page**
-![Cart page](./uiImages/cart.png)
 
-**Checkout Page**
-![Checkout page](./uiImages/checkout.png)
+
 
 **Login Page**
 ![Login page](./uiImages/login.png)
 
-**Order Details Page**
-![Order Details page](./uiImages/orderDetails.png)
 
-**Order History Page**
-![Order History page](./uiImages/orderHistory.png)
+
+
+**Home page**
+![Home page](./uiImages/home.png)
+
+
+
 
 **Product Details Page**
 ![Product Details page](./uiImages/productDetails.png)
 
+
+
+
 **Profile Page**
 ![Profile page](./uiImages/profile.png)
 
-**Registration Page**
-![Registration page](./uiImages/register.png)
+
+
+
+**Cart Page**
+![Cart page](./uiImages/cart.png)
+
+
+
+
+**Checkout Page**
+![Checkout page](./uiImages/checkout.png)
+
+
+
+
+**Order History Page**
+![Order History page](./uiImages/orderHistory.png)
+
+
+
+
+**Order Details Page**
+![Order Details page](./uiImages/orderDetails.png)
