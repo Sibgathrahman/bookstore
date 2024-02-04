@@ -66,13 +66,16 @@ This is an e-commerce web application developed using React.js for the front end
   - cd frontend
   - npm install
   - npm start
+  - url: http://localhost:3000/
 
 3. Backend
   - cd backend
   - pip install -r requirements.txt
   - python manage.py makemigrations
   - python manage.py migrate
+  - python manage.py createsuperuser(for manage admin panel)
   - python manage.py runserver
+  - url : http://127.0.0.1:8000/admin
 
 
 ## UI Designs
