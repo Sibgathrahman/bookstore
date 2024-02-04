@@ -61,15 +61,13 @@ const Product = ({ item }) => {
                 </Link>
                 <div className="card-body">
                     {/* Product title */}
-                    <h4 className="card-title">{item.title}</h4>
-                    {/* Short product description */}
-                    <p className="card-text">
-                        {item.description.substring(0, 50)}...{' '}
-                        <Link to={`/product/${item.id}`} style={{ textDecoration: 'none' }}>
-                            {' '}
-                            Read more
-                        </Link>
-                    </p>
+                    <Link to={`/product/${item.id}`} style={{ textDecoration: 'none', color: 'black' }}>
+                        <h4 className="card-title">{item.title}</h4>
+                        {/* Short product description */}
+                        <p className="card-text">
+                            {item.author.name}
+                        </p>
+                    </Link>
                     {/* Buy section with price and add to cart button */}
                     <div className="buy d-flex justify-content-between align-items-center">
                         {/* Price information */}

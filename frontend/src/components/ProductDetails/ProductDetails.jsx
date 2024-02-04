@@ -22,7 +22,7 @@ const ProductDetails = () => {
                 });
 
                 setProduct(response?.data);
-                getCategoryData(response?.data?.category['id']);
+                getCategoryData(response?.data?.author['id']);
             } catch (error) {
                 console.error('Error fetching product details:', error);
             }
@@ -36,7 +36,7 @@ const ProductDetails = () => {
         try {
             const response = await Axios({
                 method: 'get',
-                url: `${domain}/api/category/${id}/`,
+                url: `${domain}/api/author/${id}/`,
             });
 
             console.log(response?.data);
@@ -101,6 +101,10 @@ const ProductDetails = () => {
                                     <main className="col-md-6">
                                         <h3 className="title">{product.title}</h3>
                                         <hr />
+                                        <div className="mb-3">
+                                            <h6>Author : </h6>
+                                            <ul className="list-dots mb-0">{product.author.name}</ul>
+                                        </div>
                                         <div className="mb-3">
                                             <h6>Short description</h6>
                                             <ul className="list-dots mb-0">{product.description}</ul>

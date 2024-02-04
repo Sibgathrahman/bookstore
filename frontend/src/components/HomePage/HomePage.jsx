@@ -8,6 +8,8 @@ const HomePage = () => {
     const [products, setProducts] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredProducts, setFilteredProducts] = useState(null);
 
     // Fetch data when the component mounts or page changes
     useEffect(() => {
@@ -27,33 +29,70 @@ const HomePage = () => {
         getData();
     }, [currentPage]);
 
+    useEffect(() => {
+        if (products) {
+            // Filter products based on search term
+            const filtered = products.results.filter((product) =>
+                product.title && product.title.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setFilteredProducts({ ...products, results: filtered });
+        }
+    }, [searchTerm, products]);
+
     // Function to fetch a specific page of products
     const goToPage = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
     return (
-        <div className="container-fluid">
+        <div className="container container-fluid">
+            <div className="row justify-content-center m-3">
+                <div className="col-9">
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search products"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                </div>
+            </div>
             <div className="row ps-md-5 pe-md-5 ps-sm-2 pe-sm-2 mx-auto">
                 <div className="row mx-auto">
                     {error ? (
-                        // Display an error message if there's an error
                         <div className="col-12">
                             <h1>Error: {error}</h1>
                         </div>
                     ) : (
-                        // Display products or loading message
                         <>
-                            {products !== null ? (
-                                products.results.map((item, i) => (
-                                    <div className="col-12 col-sm-8 col-md-6 col-lg-4" key={i}>
-                                        <Product item={item} />
+                            {searchTerm === '' ? (
+                                // Display all products when no search term
+                                products !== null ? (
+                                    products.results.map((item, i) => (
+                                        <div className="col-12 col-sm-8 col-md-6 col-lg-4" key={i}>
+                                            <Product item={item} />
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="col-12">
+                                        <h1>Loading...</h1>
                                     </div>
-                                ))
+                                )
                             ) : (
-                                <div className="col-12">
-                                    <h1>Loading...</h1>
-                                </div>
+                                // Display filtered products when search term exists
+                                filteredProducts !== null && filteredProducts.results.length > 0 ? (
+                                    filteredProducts.results.map((item, i) => (
+                                        <div className="col-12 col-sm-8 col-md-6 col-lg-4" key={i}>
+                                            <Product item={item} />
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="col-12">
+                                        <h1>No results found.</h1>
+                                    </div>
+                                )
                             )}
                         </>
                     )}
@@ -61,7 +100,7 @@ const HomePage = () => {
                 {/* Pagination controls */}
                 <div className="homepage__pagination">
                     <div className="pt-3 pb-5 ms-auto">
-                        {products?.count &&
+                        {searchTerm === '' && products?.count && (
                             Array.from({ length: Math.ceil(products.count / 10) }, (_, index) => (
                                 <button
                                     key={index + 1}
@@ -70,7 +109,9 @@ const HomePage = () => {
                                 >
                                     {index + 1}
                                 </button>
-                            ))}
+                            ))
+                        )}
+
                     </div>
                 </div>
             </div>

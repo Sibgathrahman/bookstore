@@ -3,14 +3,14 @@ from .models import *
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "category", "selling_price", "date")
+    list_display = ("id", "title", "author", "selling_price", "date")
 
 
 admin.site.register(Product, ProductAdmin)
 
 
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("id", 'title', 'date')
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ("id", 'name', 'date')
 
 
-admin.site.register(Category, CategoryAdmin)
+admin.site.register(Author, AuthorAdmin)

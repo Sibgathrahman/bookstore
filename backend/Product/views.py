@@ -92,12 +92,12 @@ class ProfileView(views.APIView):
 
 
 
-class CategoryViewSet(viewsets.ViewSet):
+class AuthorViewSet(viewsets.ViewSet):
     def list(self, request):
         try:
             # Retrieve all categories and serialize the data
-            query = Category.objects.all()
-            serializer = CategorySerializer(query, many=True)
+            query = Author.objects.all()
+            serializer = AuthorSerializer(query, many=True)
             return Response(serializer.data)
 
         except Exception as e:
@@ -108,13 +108,13 @@ class CategoryViewSet(viewsets.ViewSet):
     def retrieve(self, request, pk=None):
         try:
             # Retrieve a specific category by its primary key, return 404 if not found
-            query = get_object_or_404(Category, id=pk)
-            serializer = CategorySerializer(query)
+            query = get_object_or_404(Author, id=pk)
+            serializer = AuthorSerializer(query)
             data_data = serializer.data
             all_data = []
 
             # Retrieve products associated with the category and serialize the data
-            category_product = Product.objects.filter(category_id=data_data['id'])
+            category_product = Product.objects.filter(author_id=data_data['id'])
             category_product_serializer = ProductSerializers(category_product, many=True)
             data_data['category_product'] = category_product_serializer.data
             all_data.append(data_data)
@@ -124,7 +124,7 @@ class CategoryViewSet(viewsets.ViewSet):
         except Exception as e:
             # Handle unexpected errors
             print(e)
-            return Response({"error": True, "message": "Category not found"}, status=404)  # HTTP 404 Not Found
+            return Response({"error": True, "message": "Author not found"}, status=404)  # HTTP 404 Not Found
 
 
 

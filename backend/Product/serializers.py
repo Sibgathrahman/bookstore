@@ -97,7 +97,7 @@ class ProfileSerializers(serializers.ModelSerializer):
 
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = Author
         fields = "__all__"
